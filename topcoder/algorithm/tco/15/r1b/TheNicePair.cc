@@ -23,9 +23,10 @@ using namespace std;
 #define ALL(c) (c).begin(), (c).end()
 #define FOR(i, n) for (int i = 0; i < (int)(n); ++i)
 #define MEMSET(p, c) memset(p, c, sizeof(p))
-typedef long long llint;
+typedef int64_t LL;
 typedef pair<int, int> PII;
-$BEGINCUT$
+const int E9 = 1000000000;
+/// BEGIN CUT HERE
 // <errf>
 inline void errf(const char *fmt, ...) {
   va_list args;
@@ -43,20 +44,35 @@ inline void errf(const char *fmt, const vector<T>& v) {
   errf("}\n");
 }
 // </errf>
-$ENDCUT$
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct TheNicePair {
+  int solve(vector <int> A);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
-
+int TheNicePair::solve(vector <int> A) {
+  int n = A.size();
+  int ans = -1;
+  for (int v = 2; v <= 1000; ++v) {
+    FOR (i, n) {
+      int k = 0;
+      for (int j = i; j < n; ++j) {
+        if (A[j] % v == 0) {
+          ++k;
+        }
+        if (2 * k >= j - i + 1) {
+          ans = max(ans, j - i);
+        }
+      }
+    }
+  }
+  return ans;
 }
 
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <main>
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -96,7 +112,48 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        int AARRAY[] = {5,5,5,5,5};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(0, theObject.solve(A),4);
+    }
+    {
+        int AARRAY[] = {1,1,1,1};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(1, theObject.solve(A),-1);
+    }
+    {
+        int AARRAY[] = {2,3,5,7};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(2, theObject.solve(A),1);
+    }
+    {
+        int AARRAY[] = {8,8,5,5,5};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(3, theObject.solve(A),4);
+    }
+    {
+        int AARRAY[] = {1,1000,1000,1,1000,1,999};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(4, theObject.solve(A),5);
+    }
+    {
+        int AARRAY[] = {1000,1,1,1000};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(5, theObject.solve(A),3);
+    }
+    {
+        int AARRAY[] = {1,1,953,1,1,1,1,1,1,1,1,1,1,1,1,953,1,953,953,1,1,1,1,1,1,1,953,953,953,1,1,1,1,1,953,953,1,1,1,953,953,953,1};
+        vector <int> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        TheNicePair theObject;
+        eq(6, theObject.solve(A),15);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -127,4 +184,4 @@ int main(int argc, char *argv[]) {
  * vim: ft=cpp.doxygen
  */
 // </main>
-$ENDCUT$
+/// END CUT HERE

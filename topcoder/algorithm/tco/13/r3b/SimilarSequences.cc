@@ -22,11 +22,11 @@ using namespace std;
 
 #define ALL(c) (c).begin(), (c).end()
 #define FOR(i, n) for (int i = 0; i < (int)(n); ++i)
+#define FOREACH(i, n) for (__typeof(n.begin()) i = n.begin(); i != n.end(); ++i)
 #define MEMSET(p, c) memset(p, c, sizeof(p))
 typedef long long llint;
 typedef pair<int, int> PII;
-$BEGINCUT$
-// <errf>
+/// BEGIN CUT HERE
 inline void errf(const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
@@ -37,27 +37,55 @@ inline void errf(const char *fmt, ...) {
 template<typename T>
 inline void errf(const char *fmt, const vector<T>& v) {
   errf("{");
-  for (const auto& i: v) {
-    errf(fmt, i);
+  FOR(i, v.size()) {
+    errf(fmt, v[i]);
   }
   errf("}\n");
 }
-// </errf>
-$ENDCUT$
+// TODO
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct SimilarSequences {
+  int count(vector <int> seq, int bound);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
+const llint MOD = 1000000009;
 
+int SimilarSequences::count(vector <int> seq, int bound) {
+  set<int> bad(seq.begin(), seq.end());
+  set<vector<int> > st;
+  set<pair<vector<int>, vector<int> > > st2;
+  int n = seq.size();
+
+  FOR (i, n) {
+    vector<int> tmp = seq;
+    tmp.erase(tmp.begin() + i);
+    FOR (j, n) {
+      vector<int> head(tmp.begin(), tmp.begin() + j);
+      vector<int> tail(tmp.begin() + j, tmp.end());
+      st2.insert(make_pair(head, tail));
+
+      tmp.insert(tmp.begin() + j, -1);
+      FOREACH (e, bad) {
+        tmp[j] = *e;
+        st.insert(tmp);
+      }
+      tmp.erase(tmp.begin() + j);
+    }
+  }
+
+  // printf("%d %d\n", st.size(), st2.size());
+
+  llint ans = (llint)st2.size() * (bound - (llint)bad.size());
+  ans += st.size();
+  return (int)(ans % MOD);
 }
 
-$BEGINCUT$
-// <main>
+/// BEGIN CUT HERE
+// TODO
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
 template<typename T>
@@ -96,7 +124,36 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        int seqARRAY[] = {1, 1};
+        vector <int> seq( seqARRAY, seqARRAY+ARRSIZE(seqARRAY) );
+        SimilarSequences theObject;
+        eq(0, theObject.count(seq, 3),5);
+    }
+    {
+        int seqARRAY[] = {1, 2};
+        vector <int> seq( seqARRAY, seqARRAY+ARRSIZE(seqARRAY) );
+        SimilarSequences theObject;
+        eq(1, theObject.count(seq, 2),4);
+    }
+    {
+        int seqARRAY[] = {999999999};
+        vector <int> seq( seqARRAY, seqARRAY+ARRSIZE(seqARRAY) );
+        SimilarSequences theObject;
+        eq(2, theObject.count(seq, 1000000000),1000000000);
+    }
+    {
+        int seqARRAY[] = {1, 2, 3, 4, 5};
+        vector <int> seq( seqARRAY, seqARRAY+ARRSIZE(seqARRAY) );
+        SimilarSequences theObject;
+        eq(3, theObject.count(seq, 5),97);
+    }
+    {
+        int seqARRAY[] = {5, 8, 11, 12, 4, 1, 7, 9};
+        vector <int> seq( seqARRAY, seqARRAY+ARRSIZE(seqARRAY) );
+        SimilarSequences theObject;
+        eq(4, theObject.count(seq, 1000000000),999999363);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -117,14 +174,12 @@ int main(int argc, char *argv[]) {
 }
 
 /*
- * __builtin_popcount __builtin_ctz
- * make_pair first second
- * iterator const_iterator
+ * __builtin_popcount __builtin_ctz make_pair
  * priority_queue
  * push_back
+ * first second iterator const_iterator
  */
 /*
  * vim: ft=cpp.doxygen
  */
-// </main>
-$ENDCUT$
+/// END CUT HERE

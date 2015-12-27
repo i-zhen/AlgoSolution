@@ -23,9 +23,10 @@ using namespace std;
 #define ALL(c) (c).begin(), (c).end()
 #define FOR(i, n) for (int i = 0; i < (int)(n); ++i)
 #define MEMSET(p, c) memset(p, c, sizeof(p))
-typedef long long llint;
+typedef int64_t LL;
 typedef pair<int, int> PII;
-$BEGINCUT$
+const int E9 = 1000000000;
+/// BEGIN CUT HERE
 // <errf>
 inline void errf(const char *fmt, ...) {
   va_list args;
@@ -43,20 +44,51 @@ inline void errf(const char *fmt, const vector<T>& v) {
   errf("}\n");
 }
 // </errf>
-$ENDCUT$
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct Revmatching {
+  int smallest(vector <string> A);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
+const int MAXN = 20;
+int e[MAXN][MAXN];
 
+int Revmatching::smallest(vector <string> A) {
+  int n = A.size();
+  MEMSET(e, 0);
+  int sum = 0;
+  FOR (i, n) {
+    FOR (j, n) {
+      e[i][j] = A[i][j] - '0';
+      sum += e[i][j];
+    }
+  }
+
+  int ans = sum;
+  FOR (i, 1 << n) {
+    if (i == 0) {
+      continue;
+    }
+    vector<int> v(n);
+    FOR (j, n) {
+      if ((i & (1 << j)) == 0) {
+        continue;
+      }
+      FOR (k, n) {
+        v[k] += e[k][j];
+      }
+    }
+    sort(ALL(v));
+    int m = n - __builtin_popcount(i) + 1;
+    ans = min(ans, accumulate(v.begin(), v.begin() + m, 0));
+  }
+  return ans;
 }
 
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <main>
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -96,7 +128,42 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        string AARRAY[] = {"1"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(0, theObject.smallest(A),1);
+    }
+    {
+        string AARRAY[] = {"0"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(1, theObject.smallest(A),0);
+    }
+    {
+        string AARRAY[] = {"44","44"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(2, theObject.smallest(A),8);
+    }
+    {
+        string AARRAY[] = {"861","870","245"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(3, theObject.smallest(A),6);
+    }
+    {
+        string AARRAY[] = {"01000","30200","11102","10001","11001"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(4, theObject.smallest(A),0);
+    }
+    {
+        string AARRAY[] = {"0111101100","0001101001","1001001000","1000100001","0110011111","0011110100","1000001100","0001100000","1000100001","0101110010"};
+        vector <string> A( AARRAY, AARRAY+ARRSIZE(AARRAY) );
+        Revmatching theObject;
+        eq(5, theObject.smallest(A),1);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -127,4 +194,4 @@ int main(int argc, char *argv[]) {
  * vim: ft=cpp.doxygen
  */
 // </main>
-$ENDCUT$
+/// END CUT HERE

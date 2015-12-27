@@ -23,9 +23,10 @@ using namespace std;
 #define ALL(c) (c).begin(), (c).end()
 #define FOR(i, n) for (int i = 0; i < (int)(n); ++i)
 #define MEMSET(p, c) memset(p, c, sizeof(p))
-typedef long long llint;
+typedef int64_t LL;
 typedef pair<int, int> PII;
-$BEGINCUT$
+const int E9 = 1000000000;
+/// BEGIN CUT HERE
 // <errf>
 inline void errf(const char *fmt, ...) {
   va_list args;
@@ -43,20 +44,39 @@ inline void errf(const char *fmt, const vector<T>& v) {
   errf("}\n");
 }
 // </errf>
-$ENDCUT$
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct DevuAndBeautifulSubstrings {
+  long long countBeautifulSubstrings(int n, int cnt);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
+const int MAXN = 52;
+const int MAXM = MAXN * (MAXN + 1) / 2;
+int64_t dp[MAXN][MAXN][MAXM];
 
+long long DevuAndBeautifulSubstrings::countBeautifulSubstrings(int n, int cnt) {
+  MEMSET(dp, 0);
+  dp[1][1][1] = 2;
+  for (int i = 1; i < n; ++i) {
+    for (int j = 1; j <= i; ++j) {
+      int maxk = i * (i + 1) / 2;
+      for (int k = 0; k <= maxk; ++k) {
+        dp[i+1][j+1][k+j+1] += dp[i][j][k];
+        dp[i+1][1][k+1] += dp[i][j][k];
+      }
+    }
+  }
+  int64_t ans = 0;
+  for (int j = 1; j <= n; ++j) {
+    ans += dp[n][j][cnt];
+  }
+  return ans;
 }
 
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <main>
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -96,7 +116,30 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        DevuAndBeautifulSubstrings theObject;
+        eq(0, theObject.countBeautifulSubstrings(2, 2),2L);
+    }
+    {
+        DevuAndBeautifulSubstrings theObject;
+        eq(1, theObject.countBeautifulSubstrings(2, 1),0L);
+    }
+    {
+        DevuAndBeautifulSubstrings theObject;
+        eq(2, theObject.countBeautifulSubstrings(3, 4),4L);
+    }
+    {
+        DevuAndBeautifulSubstrings theObject;
+        eq(3, theObject.countBeautifulSubstrings(15, 35),642L);
+    }
+    {
+        DevuAndBeautifulSubstrings theObject;
+        eq(4, theObject.countBeautifulSubstrings(40, 820),2L);
+    }
+    {
+        DevuAndBeautifulSubstrings theObject;
+        eq(5, theObject.countBeautifulSubstrings(50, 94),32357325751902L);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -127,4 +170,4 @@ int main(int argc, char *argv[]) {
  * vim: ft=cpp.doxygen
  */
 // </main>
-$ENDCUT$
+/// END CUT HERE

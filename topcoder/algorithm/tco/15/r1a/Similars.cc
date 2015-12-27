@@ -25,7 +25,7 @@ using namespace std;
 #define MEMSET(p, c) memset(p, c, sizeof(p))
 typedef long long llint;
 typedef pair<int, int> PII;
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <errf>
 inline void errf(const char *fmt, ...) {
   va_list args;
@@ -43,20 +43,39 @@ inline void errf(const char *fmt, const vector<T>& v) {
   errf("}\n");
 }
 // </errf>
-$ENDCUT$
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct Similars {
+  int maxsim(int L, int R);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
-
+int Similars::maxsim(int L, int R) {
+  vector<int> v(1 << 10);
+  for (int i = L; i <= R; ++i) {
+    int m = 0;
+    for (int j = i; j > 0; j /= 10) {
+      m |= 1 << (j % 10);
+    }
+    ++v[m];
+  }
+  FOR (i, v.size()) {
+    for (int j = (i - 1) & i; j > 0; j = (j - 1) & i) {
+      v[j] += v[i];
+    }
+  }
+  int ans = 0;
+  FOR (i, v.size()) {
+    if (v[i] > 1) {
+      ans = max(ans, __builtin_popcount(i));
+    }
+  }
+  return ans;
 }
 
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <main>
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -96,7 +115,26 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        Similars theObject;
+        eq(0, theObject.maxsim(1, 10),1);
+    }
+    {
+        Similars theObject;
+        eq(1, theObject.maxsim(1, 99),2);
+    }
+    {
+        Similars theObject;
+        eq(2, theObject.maxsim(99, 100),0);
+    }
+    {
+        Similars theObject;
+        eq(3, theObject.maxsim(1000, 1010),2);
+    }
+    {
+        Similars theObject;
+        eq(4, theObject.maxsim(444, 454),2);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -127,4 +165,4 @@ int main(int argc, char *argv[]) {
  * vim: ft=cpp.doxygen
  */
 // </main>
-$ENDCUT$
+/// END CUT HERE

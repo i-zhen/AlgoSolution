@@ -25,7 +25,7 @@ using namespace std;
 #define MEMSET(p, c) memset(p, c, sizeof(p))
 typedef long long llint;
 typedef pair<int, int> PII;
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <errf>
 inline void errf(const char *fmt, ...) {
   va_list args;
@@ -43,20 +43,44 @@ inline void errf(const char *fmt, const vector<T>& v) {
   errf("}\n");
 }
 // </errf>
-$ENDCUT$
+/// END CUT HERE
 #ifndef __WATASHI__
 #define errf(fmt, ...) do { } while (false)
 #endif
 
-struct $CLASSNAME$ {
-  $RC$ $METHODNAME$($METHODPARMS$);
+struct Autogame {
+  int wayscnt(vector <int> a, int K);
 };
 
-$RC$ $CLASSNAME$::$METHODNAME$($METHODPARMS$) {
+const int64_t MOD = 1000000007;
 
+int Autogame::wayscnt(vector <int> a, int K) {
+  map<int, int> mp;
+  FOR (i, a.size()) {
+    int k = i, s, t;
+    vector<int> path;
+    while (true) {
+      s = find(ALL(path), k) - path.begin();
+      t = (int)path.size();
+      if (s < t) {
+        break;
+      }
+      path.emplace_back(k);
+      k = a[k] - 1;
+    }
+    int pos = K < s
+            ? path[K]
+            : path[s + (K - s) % (t - s)];
+    ++mp[pos];
+  }
+  int64_t ans = 1;
+  for (const auto& i: mp) {
+    ans = ans * (i.second + 1) % MOD;
+  }
+  return (int)ans;
 }
 
-$BEGINCUT$
+/// BEGIN CUT HERE
 // <main>
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
@@ -96,7 +120,36 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  $MAINBODY$
+      {
+        int aARRAY[] = {1,2,3};
+        vector <int> a( aARRAY, aARRAY+ARRSIZE(aARRAY) );
+        Autogame theObject;
+        eq(0, theObject.wayscnt(a, 5),8);
+    }
+    {
+        int aARRAY[] = {1,1,1};
+        vector <int> a( aARRAY, aARRAY+ARRSIZE(aARRAY) );
+        Autogame theObject;
+        eq(1, theObject.wayscnt(a, 1),4);
+    }
+    {
+        int aARRAY[] = {2,1}	;
+        vector <int> a( aARRAY, aARRAY+ARRSIZE(aARRAY) );
+        Autogame theObject;
+        eq(2, theObject.wayscnt(a, 42),4);
+    }
+    {
+        int aARRAY[] = {2,3,4,3};
+        vector <int> a( aARRAY, aARRAY+ARRSIZE(aARRAY) );
+        Autogame theObject;
+        eq(3, theObject.wayscnt(a, 3),9);
+    }
+    {
+        int aARRAY[] = {4,4,3,2,1};
+        vector <int> a( aARRAY, aARRAY+ARRSIZE(aARRAY) );
+        Autogame theObject;
+        eq(4, theObject.wayscnt(a, 3),18);
+    }
 
   int __pass__ = count(ALL(__eq__), true);
   int __fail__ = count(ALL(__eq__), false);
@@ -127,4 +180,4 @@ int main(int argc, char *argv[]) {
  * vim: ft=cpp.doxygen
  */
 // </main>
-$ENDCUT$
+/// END CUT HERE
